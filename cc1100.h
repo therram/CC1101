@@ -1,26 +1,33 @@
 #ifndef cc1100_H
 #define cc1100_H
 
-#include <stdint.h>
-
+#include <Arduino.h>
 
 /*----------------------------------[standard]--------------------------------*/
-#define TRUE  (1==1)
-#define FALSE (!TRUE)
+#define TRUE  1
+#define FALSE 0
 
+//|=====================[ setting EEPROM addresses]=============================
+#define EEPROM_ADDRESS_CC1100_FREQUENCY 0x1F4  //ISM band
+#define EEPROM_ADDRESS_CC1100_MODE      0x1F5  //modulation mode
+#define EEPROM_ADDRESS_CC1100_MY_ADDR   0x1F6  //receiver address
+#define EEPROM_ADDRESS_CC1100_CHANNEL   0x1F7  //channel number
 
 //**************************** pins ******************************************//
+#define SCK_PIN  13
+#define MISO_PIN 12
+#define MOSI_PIN 11
 #define SS_PIN   10
-#define GDO2      6
+#define GDO2      3                     //2 main, 5 remote, 3 M16
 #define GDO0     99
 
 /*----------------------[CC1100 - misc]---------------------------------------*/
 #define CRYSTAL_FREQUENCY         26000000
 #define CFG_REGISTER              0x2F  //47 registers
-#define FIFOBUFFER                0x42  //size of Fifo Buffer +2 for rssi and lqi
+#define FIFOBUFFER                0x42  //size of Fifo Buffer
 #define RSSI_OFFSET_868MHZ        0x4E  //dec = 74
 #define TX_RETRIES_MAX            0x05  //tx_retries_max
-#define ACK_TIMEOUT                250  //ACK timeout in ms
+#define ACK_TIMEOUT                200  //ACK timeout in ms
 #define CC1100_COMPARE_REGISTER   0x00  //register compare 0=no compare 1=compare
 #define BROADCAST_ADDRESS         0x00  //broadcast address
 #define CC1100_FREQ_315MHZ        0x01
@@ -205,11 +212,12 @@ class CC1100
         void set_manchester_encoding(uint8_t cfg);
         void set_sync_mode(uint8_t cfg);
         void set_datarate(uint8_t mdmcfg4, uint8_t mdmcfg3, uint8_t deviant);
+
+        void uart_puthex_nibble(const unsigned char b);
+        void uart_puthex_byte(const unsigned char  b);
+        void uart_puti(const int val);
+
 };
-
-
-
 //=======================[CC1100 special functions]=============================
-
 
 #endif // CC1100_H
